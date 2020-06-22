@@ -1,6 +1,7 @@
 {
-  "name": "bdehlin-template",
-  "version": "1.0.0",
+  "name": "cra-template-bdehlin",
+  "version": "1.0.3",
+  "main": "./template.json",
   "keywords": [
     "react",
     "create-react-app",
