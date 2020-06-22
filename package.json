@@ -1,6 +1,6 @@
 {
   "name": "cra-template-bdehlin",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "main": "./template.json",
   "keywords": [
     "react",
@@ -11,7 +11,7 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/BenDehlin/cra-template-bdehlin",
-    "directory": "packages/cra-template"
+    "directory": "/cra-template-bdehlin"
   },
   "license": "MIT",
   "engines": {
