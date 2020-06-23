@@ -22,7 +22,7 @@ const Register = () => {
         <input
           name="password"
           type="password"
-          value="password"
+          value={password}
           onChange={setInput}
         />
         <button type="submit">Register</button>

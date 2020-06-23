@@ -20,13 +20,19 @@ export const UserProvider = ({ children }) => {
   const register = (body) => {
     axios
       .post("/auth/register", body)
-      .then(({ data }) => setUser(data))
+      .then(({ data }) => {
+        setUser(data)
+        push("/dashboard")
+      })
       .catch(({ message }) => console.log(message))
   }
   const logout = () => {
     axios
       .post("/auth/logout")
-      .then(() => setUser(null))
+      .then(() => {
+        setUser(null)
+        push('/')
+      })
       .catch(({ message }) => console.log(message))
   }
   const getUser = () => {
