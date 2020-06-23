@@ -1,7 +1,9 @@
-import React from 'react'
+import React from "react"
+import useAuth from "../hooks/useAuth"
 
 const Dashboard = () => {
-  return(
+  useAuth()
+  return (
     <div>Dashboard</div>
   )
 }

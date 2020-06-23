@@ -10,6 +10,7 @@ const { SERVER_PORT, SESSION_SECRET, CONNECTION_STRING } = process.env
 const authCtrl = require("./controllers/authController")
 
 //Middleware
+const authMid = require("./middleware/authMiddleware")
 app.use(express.json())
 app.use(
   session({
@@ -20,11 +21,12 @@ app.use(
   })
 )
 
+//Database connection
 massive({
   connectionString: CONNECTION_STRING,
   ssl: { rejectUnauthorized: false },
 }).then((db) => {
-  app.set('db', db)
+  app.set("db", db)
   console.log("Database connected")
   const io = require("socket.io")(
     app.listen(SERVER_PORT, () =>
@@ -32,7 +34,10 @@ massive({
     )
   )
   app.set("io", io)
-  io.on("connection", (socket) => {})
+  //Socket connection
+  io.on("connection", (socket) => {
+    console.log("User connected")
+  })
 })
 
 //Endpoints
@@ -40,4 +45,4 @@ massive({
 app.post("/auth/register", authCtrl.register)
 app.post("/auth/login", authCtrl.login)
 app.post("/auth/logout", authCtrl.logout)
-app.get("/auth/user", authCtrl.getUser)
+app.get("/auth/user", authMid.usersOnly, authCtrl.getUser)

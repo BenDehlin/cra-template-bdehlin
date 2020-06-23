@@ -4,7 +4,7 @@ import {UserContext} from '../context/UserContext'
 
 const Login = () => {
     const {login} = useContext(UserContext)
-  const [{ username, password }, {setInput}] = useInput({
+  const [{ username, password }, setInput] = useInput({
     username: "",
     password: "",
   })
