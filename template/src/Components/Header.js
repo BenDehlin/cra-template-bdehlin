@@ -1,6 +1,7 @@
 import React, { useContext } from "react"
 import { useHistory } from "react-router-dom"
 import { UserContext } from "../context/UserContext"
+import {Button} from '@material-ui/core'
 
 const Header = () => {
   const { push } = useHistory()
@@ -9,13 +10,13 @@ const Header = () => {
     <header>
       {user ? (
         <nav>
-          <button onClick={() => push("/dashboard")}>Dashboard</button>
-          <button onClick={logout}>Logout</button>
+          <Button onClick={() => push("/dashboard")}>Dashboard</Button>
+          <Button onClick={logout}>Logout</Button>
         </nav>
       ) : (
         <nav>
-          <button onClick={() => push("/")}>Login</button>
-          <button onClick={() => push("/register")}>Register</button>
+          <Button onClick={() => push("/")}>Login</Button>
+          <Button onClick={() => push("/register")}>Register</Button>
         </nav>
       )}
     </header>

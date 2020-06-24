@@ -3,6 +3,8 @@
     "main": "./server/index.js",
     "proxy": "http://localhost:3333",
     "dependencies": {
+      "@material-ui/core": "^4.10.2",
+      "formik": "^2.1.4",
       "axios": "^0.19.2",
       "bcryptjs": "^2.4.3",
       "dotenv": "^8.2.0",

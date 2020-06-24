@@ -1,31 +1,25 @@
-import React, {useContext} from "react"
-import useInput from "../hooks/useInput"
-import {UserContext} from '../context/UserContext'
+import React, { useContext } from "react"
+import { UserContext } from "../context/UserContext"
+import { Formik, Form, Field } from "formik"
+import { Button, TextField } from "@material-ui/core"
 
 const Login = () => {
-    const {login} = useContext(UserContext)
-  const [{ username, password }, setInput] = useInput({
-    username: "",
-    password: "",
-  })
+  const { login } = useContext(UserContext)
   return (
-    <div>
-      <form
-        onSubmit={(e) => {
+    <Formik initialValues={{ username: "", password: "" }}>
+      {({ values: { username, password } }) => (
+        <Form
+          onSubmit={(e) => {
             e.preventDefault()
-            login({username, password})
-        }}
-      >
-        <input name="username" value={username} onChange={setInput} />
-        <input
-          type="password"
-          name="password"
-          value={password}
-          onChange={setInput}
-        />
-        <button type="submit">Login</button>
-      </form>
-    </div>
+            login({ username, password })
+          }}
+        >
+          <Field name="username" as={TextField} />
+          <Field name="password" type="password" as={TextField} />
+          <Button type="submit">Login</Button>
+        </Form>
+      )}
+    </Formik>
   )
 }
 
