@@ -1,52 +1,50 @@
-const bcrypt = require("bcryptjs")
-
+const { hashSync, genSaltSync, compareSync } = require("bcryptjs")
 module.exports = {
   register: async (req, res) => {
-    const db = req.app.get("db")
-    const { username, email, password} = req.body
-    const emailResult = await db.auth.get_user_email(email)
-    if (emailResult[0]) {
-      return res.status(409).send("Email already registered")
+    const User = req.app.get("User")
+    const { username, email, password } = req.body
+    if (await User.findOne({ where: { email } })) {
+      return res.status(409).send("Email already registered.")
     }
-    const usernameResult = await db.auth.get_user_username(username)
-    if (usernameResult[0]) {
-      return res.status(409).send("Username taken")
+    if (await User.findOne({ where: { username } })) {
+      return res.status(409).send("Username taken.")
     }
-    const salt = bcrypt.genSaltSync(10)
-    const hash = bcrypt.hashSync(password, salt)
-    const user = await db.auth.register_user({
+    User.create({
       username,
       email,
-      password: hash
+      password: hashSync(password, genSaltSync(10)),
+      is_admin: false,
     })
-    delete user[0].password
-    req.session.user = user[0]
-    return res.status(200).send(req.session.user)
+      .then((user) => {
+        req.session.user = user.noPassword()
+        res.status(200).send(req.session.user)
+      })
+      .catch((err) => res.status(500).send(err))
   },
   login: async (req, res) => {
-    const db = req.app.get("db")
+    const User = req.app.get("User")
     const { username, password } = req.body
-    const result = await db.auth.get_user_username(username)
-    const user = result[0]
-    if (!user) {
-      return res.status(401).send("User not found.")
-    }
-    const isAuthenticated = bcrypt.compareSync(password, user.password)
-    if (!isAuthenticated) {
-      return res.status(403).send("Incorrect Password.")
-    }
-    delete user.password
-    req.session.user = user
-    return res.status(200).send(req.session.user)
+    User.findOne({ where: { username } })
+      .then((user) => {
+        if (!user) {
+          return res.status(401).send("User not found.")
+        }
+        if (!compareSync(password, user.password)) {
+          return res.status(403).send("Incorrect Password.")
+        }
+        req.session.user = user.noPassword()
+        res.status(200).send(req.session.user)
+      })
+      .catch((err) => res.status(500).send(err))
   },
-  logout: (req, res) => {
+  logout: async (req, res) => {
     req.session.destroy()
     res.sendStatus(200)
   },
-  getUser: (req, res) => {
+  getUser: async (req, res) => {
     if (!req.session.user) {
-      return res.status(401).send("User not found.")
+      return res.status(401).send("User not logged in.")
     }
     res.status(200).send(req.session.user)
-  }
+  },
 }
