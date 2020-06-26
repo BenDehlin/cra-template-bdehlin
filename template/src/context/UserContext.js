@@ -1,6 +1,7 @@
-import React, { useState, createContext } from "react"
+import React, { useState, createContext, useEffect } from "react"
 import { useHistory } from "react-router-dom"
 import axios from "axios"
+import io from 'socket.io-client'
 
 export const UserContext = createContext(null)
 
@@ -8,6 +9,9 @@ export const UserProvider = ({ children }) => {
   const [user, setUser] = useState(null)
   const [socket, setSocket] = useState(null)
   const {push} = useHistory()
+  useEffect(() => {
+    user ? setSocket(io.connect("http://localhost:3333")) : setSocket(null)
+  }, [user, setSocket])
   const login = (body) => {
     axios
       .post("/auth/login", body)
