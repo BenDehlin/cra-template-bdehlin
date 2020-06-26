@@ -34,7 +34,10 @@ require("./config/database")
     )
     app.set("io", io)
     io.on("connection", (socket) => {
-      console.log("User connected")
+      console.log(`${socket.id} connected`)
+      socket.on('disconnect', () => {
+        console.log(`${socket.id} disconnected`)
+      })
     })
   })
   .catch((err) => console.log(err))
